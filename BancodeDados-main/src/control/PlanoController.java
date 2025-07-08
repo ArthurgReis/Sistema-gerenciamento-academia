@@ -11,7 +11,6 @@ public class PlanoController {
         Plano plano = new Plano(descricao,preco);
         return planoDAO.inserirPlano(plano);
     }
-
     public Plano buscarPlano(int id_plano){
         return planoDAO.buscarPlano(id_plano);
     }
