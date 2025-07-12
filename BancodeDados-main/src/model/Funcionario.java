@@ -2,26 +2,29 @@ package model;
 
 public class Funcionario extends Conta{
     private int id_funcionario;
-    private int id_funcao;
-    private float adcSalario;
-    public Funcionario ( int id_funcionario, String nomeConta, String cpfConta, String emailConta, String telefoneConta, int idFuncao, float adcSalario) {
+    private String funcao;
+    private double salario;
+    public Funcionario ( int id_funcionario, String nomeConta, String cpfConta, String emailConta, String telefoneConta, String funcao, double salario) {
         super(nomeConta, cpfConta, emailConta, telefoneConta);
         this.id_funcionario = id_funcionario;
-        this.id_funcao = idFuncao;
-        this.adcSalario = adcSalario;
+        this.funcao = funcao;
+        this.salario = salario;
     }
 
-
-    public void setId_funcao(int id_funcao) {
-        this.id_funcao = id_funcao;
+    public String getFuncao() {
+        return funcao;
     }
 
-    public float getAdcSalario() {
-        return adcSalario;
+    public void setFuncao(String funcao) {
+        this.funcao = funcao;
     }
 
-    public void setAdcSalario(float adcSalario) {
-        this.adcSalario = adcSalario;
+    public double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(float salario) {
+        this.salario = salario;
     }
 
     public int getId_funcionario() {
@@ -32,9 +35,7 @@ public class Funcionario extends Conta{
         this.id_funcionario = id_funcionario;
     }
 
-    public int getId_funcao() {
-        return id_funcao;
-    }
+
 
     
 }

@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS academia;
-USE academia;
+
 
 create TABLE IF NOT EXISTS plano(
 	id_plano INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -46,20 +45,12 @@ create TABLE IF NOT EXISTS matricula(
     FOREIGN KEY(id_plano) REFERENCES plano(id_plano)
 );
 
-create TABLE IF NOT EXISTS funcao(
-	id_funcao INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    descricao VARCHAR(200),
-    salario_base DECIMAL(10, 2)
-
-);
-
 create TABLE IF NOT EXISTS funcionario(
 	id_funcionario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_conta INT NOT NULL UNIQUE,
-    id_funcao INT NOT NULL,
-    adicional_salario DECIMAL(10,2),
-    FOREIGN KEY(id_conta) REFERENCES conta(id_conta),
-    FOREIGN KEY(id_funcao) REFERENCES funcao(id_funcao)
+    funcao VARCHAR(20),
+    salario DECIMAL(10,2),
+    FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
 );
 
 create TABLE IF NOT EXISTS registro_acesso(

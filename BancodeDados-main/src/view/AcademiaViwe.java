@@ -123,31 +123,37 @@ public class AcademiaViwe {
     }
 
     public static void adicionarCliente(){
-        System.out.println("O cliente já possui conta cadastrada como funcionário?");
+        String cpf, obs;
+        System.out.println("O cliente já possui conta cadastrada?");
         System.out.println("1 - Sim");
         System.out.println("2 - Não");
         int opc = entrada.nextInt();
         entrada.nextLine();
         switch (opc) {
             case 1:
-                
+                System.out.println("Digite o cpf da conta:");
+                cpf = entrada.nextLine();
+                System.out.println("Observações: ");
+                obs = entrada.nextLine();
+                System.out.println(clienteController.cadastrarCliente(cpf, obs));
                 break;
 
             case 2:
                 System.out.println("Digite o nome completo:");
                 String nome = entrada.nextLine();
                 System.out.println("Digite o cpf:");
-                String cpf = entrada.nextLine();
+                cpf = entrada.nextLine();
                 System.out.println("Digite o e-mail:");
                 String email = entrada.nextLine();
                 System.out.println("Digite o telefone:");
                 String telefone = entrada.nextLine();
                 System.out.println("Observações: ");
-                String obs = entrada.nextLine();
-                clienteController.cadastrarContaCliente(nome,cpf,email,telefone,obs);
+                obs = entrada.nextLine();
+                System.out.println(clienteController.cadastrarContaCliente(nome,cpf,email,telefone,obs));
                 break;
         
             default:
+                System.out.println("Opção inválida!");
                 break;
         }
     }
@@ -178,8 +184,6 @@ public class AcademiaViwe {
         String novoTelefone = entrada.nextLine();
         System.out.println(clienteController.atualiarConta(cpf, novoNome, novoEmail, novoTelefone));
 
-        
-    
     }
 
     public static void deletarCliente(){

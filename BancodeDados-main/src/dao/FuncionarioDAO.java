@@ -5,45 +5,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Cliente;
+import model.Funcionario;
 
-public class ClienteDAO {
-    public String cadastrarContaCliente(Cliente cliente) {
+public class FuncionarioDAO {
+    public String cadastrarContaFuncionario(Funcionario Funcionario) {
         String sqlConta = "INSERT INTO conta (nome_completo, cpf, telefone, email) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConexaoDAO.getConnection();
              PreparedStatement stmtConta = conn.prepareStatement(sqlConta, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
-            stmtConta.setString(1, cliente.getNomeConta());
-            stmtConta.setString(2, cliente.getCpfConta());
-            stmtConta.setString(3, cliente.getTelefoneConta());
-            stmtConta.setString(4, cliente.getEmailConta());
+            stmtConta.setString(1, Funcionario.getNomeConta());
+            stmtConta.setString(2, Funcionario.getCpfConta());
+            stmtConta.setString(3, Funcionario.getTelefoneConta());
+            stmtConta.setString(4, Funcionario.getEmailConta());
             stmtConta.executeUpdate();
 
             try (ResultSet idGerado = stmtConta.getGeneratedKeys()) {
                 if (idGerado.next()) {
                     int idConta = idGerado.getInt(1);
 
-                    String sqlCliente = "INSERT INTO cliente (id_conta, data_cadastro, observacao) VALUES (?, CURDATE(), ?)";
-                    try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
-                        stmtCliente.setInt(1, idConta);
-                        stmtCliente.setString(2, cliente.getObsCliente());
-                        stmtCliente.executeUpdate();
+                    String sqlFuncionario = "INSERT INTO Funcionario (id_conta, funcao, salario) VALUES (?, CURDATE(), ?)";
+                    try (PreparedStatement stmtFuncionario = conn.prepareStatement(sqlFuncionario)) {
+                        stmtFuncionario.setInt(1, idConta);
+                        stmtFuncionario.setString(2, Funcionario.getFuncao());
+                        stmtFuncionario.executeUpdate();
                     }
-                    return "Cliente cadastrado com sucesso!";
+                    return "Funcionario cadastrado com sucesso!";
                 } else {
-                    return "Erro: Não foi possível obter o ID da conta para criar o cliente.";
+                    return "Erro: Não foi possível obter o ID da conta para criar o Funcionario.";
                 }
             }
         } catch (SQLException e) {
             if(e.getErrorCode() == 1062){
                 return "CPF já cadastrado!";
             }
-            return "Erro ao cadastrar cliente: " + e.getMessage();
+            return "Erro ao cadastrar Funcionario: " + e.getMessage();
         }
     }
 
-    public String cadastrarCliente(String cpf, String obs){
+    public String cadastrarFuncionario(String cpf, String funcao, float salario){
         String sql = "SELECT * FROM conta WHERE cpf = ?";
         try(
             Connection conn = ConexaoDAO.getConnection();
@@ -53,17 +53,17 @@ public class ClienteDAO {
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
                 
-                sql = "INSERT INTO cliente (id_conta, data_cadastro, observacao) VALUES (?,CURDATE(),?)";
+                sql = "INSERT INTO Funcionario (id_conta, funcao, salario) VALUES (?,CURDATE(),?)";
                 try(
                     PreparedStatement stmt2 = conn.prepareStatement(sql)
                 ){
                 stmt2.setInt(1, rs.getInt("id_conta"));
-                stmt2.setString(2, obs);
+                stmt2.setString(2, funcao);
                 stmt2.executeUpdate();
-                return "Cliente cadastrado com sucesso!";
+                return "Funcionario cadastrado com sucesso!";
 
                 }catch(SQLException e){
-                    return "Erro ao cadastrar cliente: "+ e.getMessage();
+                    return "Erro ao cadastrar Funcionario: "+ e.getMessage();
 
                 }
             }
@@ -71,13 +71,13 @@ public class ClienteDAO {
                 return "CPF não encontrado!";
             }
         }catch(SQLException e){
-            return "Erro ao cadastrar cliente:" + e.getMessage();
+            return "Erro ao cadastrar Funcionario:" + e.getMessage();
         }
         
     }
-    public ArrayList<Cliente> listartClientes(){
-        ArrayList<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM conta co, cliente cl WHERE co.id_conta = cl.id_conta";
+    public ArrayList<Funcionario> listartFuncionarios(){
+        ArrayList<Funcionario> Funcionarios = new ArrayList<>();
+        String sql = "SELECT * FROM conta co, Funcionario cl WHERE co.id_conta = cl.id_conta";
         try(
             Connection conn = ConexaoDAO.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -85,15 +85,15 @@ public class ClienteDAO {
 
         ){
             while (rs.next()) {
-                clientes.add(new Cliente(rs.getInt("id_cliente"),rs.getString("nome_completo"),rs.getString("cpf"),rs.getString("email"),rs.getString("telefone"),rs.getString("data_cadastro"),rs.getString("observacao")));
+                Funcionarios.add(new Funcionario(rs.getInt("id_funcionario"),rs.getString("nome_completo"),rs.getString("cpf"),rs.getString("email"),rs.getString("telefone"),rs.getString("funcao"),rs.getFloat("salario")));
             }
         } catch(SQLException e){
             e.printStackTrace();
         }
-        return clientes;
+        return Funcionarios;
     }
-    public Cliente buscarCliente(String cpf){
-        String sql = "SELECT * FROM conta co, cliente cl WHERE cl.id_conta = co.id_conta and cpf = ?";
+    public Funcionario buscarFuncionario(String cpf){
+        String sql = "SELECT * FROM conta co, Funcionario cl WHERE cl.id_conta = co.id_conta and cpf = ?";
         try(
             Connection conn = ConexaoDAO.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)
@@ -101,7 +101,7 @@ public class ClienteDAO {
             stmt.setString(1, cpf);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
-                return new Cliente(rs.getInt("id_cliente"),rs.getString("nome_completo"),rs.getString("cpf"),rs.getString("email"),rs.getString("telefone"),rs.getString("data_cadastro"),rs.getString("observacao"));
+                return new Funcionario(rs.getInt("id_Funcionario"),rs.getString("nome_completo"),rs.getString("cpf"),rs.getString("email"),rs.getString("telefone"),rs.getString("funcao"),rs.getDouble("salario"));
             }
         } catch(SQLException e){
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class ClienteDAO {
         }
     }
 
-    public String deletarCliente(String cpf){
+    public String deletarFuncionario(String cpf){
         String sql = "Select id_conta FROM conta where cpf = ?";
         try(
             Connection conn = ConexaoDAO.getConnection();
@@ -135,23 +135,23 @@ public class ClienteDAO {
             stmtBusca.setString(1, cpf);
             ResultSet rs = stmtBusca.executeQuery();
             if(rs.next()){
-                sql = "DELETE FROM cliente WHERE id_conta = ?";
+                sql = "DELETE FROM Funcionario WHERE id_conta = ?";
                 try (
                     PreparedStatement stmtDelete = conn.prepareStatement(sql)
                 ){
                     stmtDelete.setInt(1, rs.getInt("id_conta"));
                     stmtDelete.executeUpdate();
-                    return "Cliente removido com Sucesso!";
+                    return "Funcionario removido com Sucesso!";
 
                 } catch (SQLException e) {
-                    return "Erro ao deletar cliente "+ e.getMessage();
+                    return "Erro ao deletar Funcionario "+ e.getMessage();
                 }
             }
-            return "Cliente não enocntrado";
+            return "Funcionario não enocntrado";
 
            
         }catch(SQLException e){
-            return "Erro ao deletar cliente" + e.getMessage();
+            return "Erro ao deletar Funcionario" + e.getMessage();
         }
     } 
 

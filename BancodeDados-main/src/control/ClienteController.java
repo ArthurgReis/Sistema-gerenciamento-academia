@@ -26,4 +26,8 @@ public class ClienteController {
     public String deletarCliente(String cpf){
         return clienteDAO.deletarCliente(cpf);
     }
+
+    public String cadastrarCliente(String cpf, String obs){
+        return clienteDAO.cadastrarCliente(cpf, obs);
+    }
 }
