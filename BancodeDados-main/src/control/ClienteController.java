@@ -23,10 +23,6 @@ public class ClienteController {
         return clienteDAO.atualizarConta(cpf, nome, telefone, email);
     }
 
-    public String deletarCliente(String cpf){
-        return clienteDAO.deletarCliente(cpf);
-    }
-
     public String cadastrarCliente(String cpf, String obs){
         return clienteDAO.cadastrarCliente(cpf, obs);
     }

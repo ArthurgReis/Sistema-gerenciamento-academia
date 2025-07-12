@@ -11,6 +11,14 @@ public class Funcionario extends Conta{
         this.salario = salario;
     }
 
+    public Funcionario( String nomeConta, String cpfConta, String emailConta, String telefoneConta, String funcao, double salario) {
+        super(nomeConta, cpfConta, emailConta, telefoneConta);
+        this.funcao = funcao;
+        this.salario = salario;
+    }
+
+
+
     public String getFuncao() {
         return funcao;
     }

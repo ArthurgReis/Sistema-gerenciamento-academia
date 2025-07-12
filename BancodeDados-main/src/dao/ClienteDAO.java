@@ -126,34 +126,4 @@ public class ClienteDAO {
         }
     }
 
-    public String deletarCliente(String cpf){
-        String sql = "Select id_conta FROM conta where cpf = ?";
-        try(
-            Connection conn = ConexaoDAO.getConnection();
-            PreparedStatement stmtBusca = conn.prepareStatement(sql);
-        ){
-            stmtBusca.setString(1, cpf);
-            ResultSet rs = stmtBusca.executeQuery();
-            if(rs.next()){
-                sql = "DELETE FROM cliente WHERE id_conta = ?";
-                try (
-                    PreparedStatement stmtDelete = conn.prepareStatement(sql)
-                ){
-                    stmtDelete.setInt(1, rs.getInt("id_conta"));
-                    stmtDelete.executeUpdate();
-                    return "Cliente removido com Sucesso!";
-
-                } catch (SQLException e) {
-                    return "Erro ao deletar cliente "+ e.getMessage();
-                }
-            }
-            return "Cliente não enocntrado";
-
-           
-        }catch(SQLException e){
-            return "Erro ao deletar cliente" + e.getMessage();
-        }
-    } 
-
-
 }

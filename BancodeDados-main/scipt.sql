@@ -1,4 +1,5 @@
-
+CREATE DATABASE IF NOT EXISTS academia;
+USE academia;
 
 create TABLE IF NOT EXISTS plano(
 	id_plano INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -28,7 +29,7 @@ create TABLE IF NOT EXISTS endereco(
 create TABLE IF NOT EXISTS cliente(
 	id_cliente INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	id_conta INT NOT NULL UNIQUE,
-    data_cadastro date,
+    data_cadastro DATE,
     observacao VARCHAR(200),
     FOREIGN KEY(id_conta) REFERENCES conta(id_conta)
 );
@@ -39,8 +40,9 @@ create TABLE IF NOT EXISTS matricula(
     id_plano INT NOT NULL,
     data_inicio DATE,
     data_fim DATE,
+    esta_ativo BOOLEAN,
     data_pagamento DATE,
-    status_matricula VARCHAR(20),
+    data_vencimento DATE,
 	FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente),
     FOREIGN KEY(id_plano) REFERENCES plano(id_plano)
 );
