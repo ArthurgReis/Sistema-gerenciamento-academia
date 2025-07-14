@@ -14,9 +14,9 @@ public class EquipamentoController {
 
     public ArrayList<Equipamento> listarEquipamentos(){ return equipamentoDAO.listartEquipamentos();}
 
-    public Equipamento buscarEquipamento(int idEquipamento){ return equipamentoDAO.buscarEquipamento(idEquipamento);}
+    public String buscarEquipamento(int idEquipamento){ return equipamentoDAO.buscarEquipamento(idEquipamento);}
 
     public String deletarEquipamento(int idEquipamento){ return equipamentoDAO.deletarEquipamento(idEquipamento);}
 
-    public String atualizarEquipamento(String descricao, String marca, String musculoAlvo){ return equipamentoDAO.atualizarEquipamento(descricao, marca, musculoAlvo);}
+    public String atualizarEquipamento(int idEquipamento, String descricao, String marca, String musculoAlvo){ return equipamentoDAO.atualizarEquipamento(idEquipamento, descricao, marca, musculoAlvo);}
 }

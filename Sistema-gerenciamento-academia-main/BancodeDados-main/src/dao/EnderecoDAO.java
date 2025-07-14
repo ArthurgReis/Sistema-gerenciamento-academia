@@ -43,14 +43,14 @@ public class EnderecoDAO {
         }
     }
 
-    public String alterarEndereco(Endereco endereco) {
+    public String alterarEndereco(int idEndereco, String cep, String logradouro, String bairro, int numero) {
         String verificarSQL = "SELECT * FROM endereco WHERE id_endereco = ?";
 
-        String alterarSQL = "UPDATE endereco SET id_conta = ?, cep = ?, logradouro = ?, bairro = ?, numero = ? WHERE id_endereco = ?";
+        String alterarSQL = "UPDATE endereco SET cep = ?, logradouro = ?, bairro = ?, numero = ? WHERE id_endereco = ?";
 
         try (Connection conn = ConexaoDAO.getConnection()) {
             try (PreparedStatement stmt1 = conn.prepareStatement(verificarSQL);) {
-                stmt1.setInt(1, endereco.getIdEndereco());
+                stmt1.setInt(1, idEndereco);
                 try (ResultSet rs = stmt1.executeQuery();) {
                     if (!rs.next()) {
                             return "Não existe endereços com esse ID";
@@ -58,12 +58,11 @@ public class EnderecoDAO {
                 }
             }
             try (PreparedStatement stmt2 = conn.prepareStatement(alterarSQL)) {
-                stmt2.setInt(1, endereco.getIdConta());
-                stmt2.setString(2, endereco.getCep());
-                stmt2.setString(3, endereco.getLogradouro());
-                stmt2.setString(4, endereco.getBairro());
-                stmt2.setInt(5, endereco.getNumero());
-                stmt2.setInt(6, endereco.getIdEndereco());
+                stmt2.setString(1, cep);
+                stmt2.setString(2, logradouro);
+                stmt2.setString(3, bairro);
+                stmt2.setInt(4, numero);
+                stmt2.setInt(5,idEndereco);
 
                 stmt2.executeUpdate();
                 return("Endereco alterado com sucesso!");
@@ -82,9 +81,12 @@ public class EnderecoDAO {
              PreparedStatement stmt= conn.prepareStatement(SQL);){
                 stmt.setInt(1, idEndereco);
 
-                stmt.executeUpdate();
-
-                return("Endereço excluído com sucesso!");
+                int linhas = stmt.executeUpdate() ;
+                if(linhas > 0){
+                    return("Endereço excluído com sucesso!");
+                }
+                else
+                    return("Endereço não encontrado");
         }
         catch (SQLException e){
             return("Erro ao excluir endereco" + e.getMessage());
@@ -101,8 +103,7 @@ public class EnderecoDAO {
                 ResultSet rs = stmt.executeQuery()
         ){
             while (rs.next()) {
-                enderecos.add(new Endereco(rs.getInt("id_conta"), rs.getString("cep"), rs.getString("logradouro"), rs.getString("bairro"), rs.getInt("numero")));
-            }
+                enderecos.add(new Endereco(rs.getInt("id_endereco"), rs.getInt("id_conta"), rs.getString("cep"), rs.getString("logradouro"), rs.getString("bairro"), rs.getInt("numero"), rs.getString("complemento")));            }
         } catch(SQLException e){
             System.out.println("Erro ao listar endereços: " + e.getMessage());
             e.printStackTrace(); // Para depuração

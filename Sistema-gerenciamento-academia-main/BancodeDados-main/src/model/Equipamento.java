@@ -15,6 +15,7 @@ public class Equipamento {
 
 
     public Equipamento( int idEquipamento, String descricao, String marca, String musculoAlvo) {
+        this.idEquipamento = idEquipamento;
         this.descricao = descricao;
         this.marca = marca;
         this.musculoAlvo = musculoAlvo;

@@ -41,7 +41,7 @@ public class EquipamentoDAO {
         return equipamentos;
     }
 
-    public Equipamento buscarEquipamento(int idEquipamento) {
+    public String buscarEquipamento(int idEquipamento) {
         String sql = "SELECT * FROM equipamento WHERE id_equipamento = ?";
 
         try ( Connection conn = ConexaoDAO.getConnection();
@@ -50,7 +50,8 @@ public class EquipamentoDAO {
             ResultSet rs = stmtBusca.executeQuery();
 
             if(rs.next()){
-                return new Equipamento(rs.getInt("id_equipamento"), rs.getString("descricao"),rs.getString("marca"),rs.getString("musculo_alvo"));
+                Equipamento equipamento = new Equipamento(rs.getInt("id_equipamento"), rs.getString("descricao"),rs.getString("marca"),rs.getString("musculo_alvo"));
+                return ("ID: "+equipamento.getIdEquipamento()+"\nDescrição: "+equipamento.getDescricao()+"\nMarca: "+ equipamento.getMarca()+"\nMusculo Alvo: "+equipamento.getMusculoAlvo());
             }
             else{
                 System.out.println("Equipamento não encontrado!");
@@ -74,13 +75,13 @@ public class EquipamentoDAO {
                 }
         }
 
-    public String atualizarEquipamento(String descricao, String marca, String musculoAlvo) {
-        String sql = "SELECT * FROM equipamento WHERE descricao = ?";
+    public String atualizarEquipamento(int idEquipamento, String descricao, String marca, String musculoAlvo) {
+        String sql = "SELECT * FROM equipamento WHERE id_equipamento = ?";
 
         try (Connection conn = ConexaoDAO.getConnection();
             PreparedStatement stmtBusca = conn.prepareStatement(sql)){
 
-            stmtBusca.setString(1, descricao);
+            stmtBusca.setInt(1, idEquipamento);
             ResultSet rs = stmtBusca.executeQuery();
 
             if (rs.next()){

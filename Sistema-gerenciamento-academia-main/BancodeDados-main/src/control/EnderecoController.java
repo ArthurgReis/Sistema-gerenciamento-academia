@@ -16,6 +16,6 @@ public class EnderecoController {
 
     public String deletarEndereco(int idEndereco){ return enderecoDAO.excluirEndereco(idEndereco);}
 
-    public String alterarEndereco(Endereco endereco){
-        return enderecoDAO.alterarEndereco(endereco);}
+    public String alterarEndereco(int idEndereco, String cep, String logradouro,  String bairro, int numero) {
+        return enderecoDAO.alterarEndereco(idEndereco, cep, logradouro, bairro, numero);}
 }

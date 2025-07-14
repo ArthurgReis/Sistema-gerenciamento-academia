@@ -19,11 +19,16 @@ public class RegistroController {
             return "Erro: Data de saída não pode ser anterior à data de entrada.";
         }
 
-        Registro novoRegistro = new Registro(idCliente, dataEntrada, dataSaida);
-        return registroDAO.inserirRegistroCompleto(novoRegistro);
+        return registroDAO.inserirRegistro(idCliente, dataEntrada, dataSaida);
     }
 
-    public ArrayList<Registro> obterRegistrosPorCliente(int idCliente) {
+    public String excluirRegistro(int idCliente, LocalDateTime dataEntrada) {
+        if (idCliente <= 0) {
+            return "ID do cliente inválido.";
+        }
+        return registroDAO.excluirRegistro(idCliente, dataEntrada);
+    }
+    public ArrayList<Registro> buscarPorCliente(int idCliente) {
         return registroDAO.buscarPorCliente(idCliente);
     }
     public ArrayList<Registro> listarRegistros() {

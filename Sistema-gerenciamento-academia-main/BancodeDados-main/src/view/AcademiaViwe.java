@@ -14,7 +14,7 @@ import model.*;
 import javax.xml.transform.Source;
 
 public class AcademiaViwe {
-    private static final DateTimeFormatter FORMATADOR_DATA_HORA = ;
+    private static final DateTimeFormatter FORMATADOR_DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss") ;
     private static PlanoController planoController = new PlanoController();
     private static ClienteController clienteController = new ClienteController();
     private static FuncionarioController funcionarioController = new FuncionarioController();
@@ -37,6 +37,7 @@ public class AcademiaViwe {
             System.out.println("4 - Gerenciar Matrículas");
             System.out.println("5 - Gerenciar Equipamentos");
             System.out.println("6 - Gerenciar Enderecos");
+            System.out.println("7 - Gerenciar Registros");
             System.out.println("0 - Sair do Sistema");
             System.out.print("Escolha uma área: ");
 
@@ -67,6 +68,10 @@ public class AcademiaViwe {
                     break;
                 case 6:
                     menuEnderecos();
+                    break;
+                case 7:
+                    menuRegistros();
+                    break;
                 case 0:
                     System.out.println("Saindo do sistema...");
                     return;
@@ -150,7 +155,8 @@ public class AcademiaViwe {
                         break;
                     case 0:
                         break;
-                    default: System.out.println("Opção inválida!");
+                    default:
+                        System.out.println("Opção inválida!");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Erro: Entrada inválida. Por favor, digite um número.");
@@ -225,16 +231,16 @@ public class AcademiaViwe {
                         break;
                     case 2:
                         desativarMatricula();
-                            break;
+                        break;
                     case 3:
                         pagamentoMatricula();
-                            break;
+                        break;
                     case 4:
                         listarMatriculasAtivas();
-                            break;
+                        break;
                     case 5:
                         listarMatriculasCliente();
-                            break;
+                        break;
                     case 0:
                         break;
                     default:
@@ -274,6 +280,9 @@ public class AcademiaViwe {
                         break;
                     case 4:
                         atualizarEquipamento();
+                        break;
+                    case 5:
+                        deletarEquipamento();
                         break;
                     case 0:
                         break;
@@ -326,13 +335,15 @@ public class AcademiaViwe {
             }
         }
     }
+
     private static void menuRegistros() {
         int opc = -1;
         while (opc != 0) {
             System.out.println("\n--- Gerenciar Registros ---");
-            System.out.println("1 - Registrar entrada");
-            System.out.println("2 - Registrar saída");
+            System.out.println("1 - Inserir registro");
+            System.out.println("2 - Excluir registros");
             System.out.println("3 - Listar registros");
+            System.out.println("4 - Listar registros de um Cliente");
             System.out.println("0 - Voltar ao Menu Principal");
             System.out.print("Escolha uma opção: ");
 
@@ -345,10 +356,13 @@ public class AcademiaViwe {
                         inserirEntrada();
                         break;
                     case 2:
-                        inserirSaida();
+                        excluirRegistro();
                         break;
                     case 3:
                         listarRegistros();
+                        break;
+                    case 4:
+                        buscarPorCliente();
                         break;
                     case 0:
                         break;
@@ -567,7 +581,7 @@ public class AcademiaViwe {
         return matriculaController.listarMatriculasCliente(cpf);
     }
 
-    public static void inserirEquipamento(){
+    public static void inserirEquipamento() {
         System.out.println("Digite a descrição (nome) do equipamento:");
         String descricao = entrada.nextLine();
         System.out.println("Digite a marca do equipamento:");
@@ -577,9 +591,10 @@ public class AcademiaViwe {
         System.out.println(equipamentoController.cadastrarEquipamento(descricao, marca, musculoAlvo));
     }
 
-    public static void listarEquipamentos(){
+    public static void listarEquipamentos() {
         ArrayList<Equipamento> equipamentos = equipamentoController.listarEquipamentos();
         for (Equipamento equipamento : equipamentos) {
+            System.out.println();
             System.out.println("ID: " + equipamento.getIdEquipamento());
             System.out.println("Descricao: " + equipamento.getDescricao());
             System.out.println("Marca: " + equipamento.getMarca());
@@ -587,31 +602,34 @@ public class AcademiaViwe {
         }
     }
 
-    public static void buscarEquipamento(){
+    public static void buscarEquipamento() {
         System.out.println("Digite o ID do equipamento:");
         int idEquipamento = entrada.nextInt();
-        Equipamento equipamento = equipamentoController.buscarEquipamento(idEquipamento);
-        System.out.println(equipamento);
+
+        System.out.println(equipamentoController.buscarEquipamento(idEquipamento));
     }
 
-    public static void atualizarEquipamento(){
+    public static void atualizarEquipamento() {
+        System.out.println("Digite o ID do equipamento que deseja atualizar:");
+        int idEquipamento = entrada.nextInt();
+        entrada.nextLine();
         System.out.println("Digite a descrição do equipamento:");
         String descricao = entrada.nextLine();
         System.out.println("Digite a marca da equipamento:");
         String marca = entrada.nextLine();
         System.out.println("Digite a musculo alvo do equipamento:");
         String musculoAlvo = entrada.nextLine();
-        entrada.nextLine();
 
-        System.out.println(equipamentoController.atualizarEquipamento(descricao,marca,musculoAlvo));
+        System.out.println(equipamentoController.atualizarEquipamento(idEquipamento, descricao, marca, musculoAlvo));
     }
 
-    public static void deletarEquipamento(){
+    public static void deletarEquipamento() {
         System.out.println("Digite o ID do equipamento que deseja deletar:");
         int idEquipamento = entrada.nextInt();
         System.out.println(equipamentoController.deletarEquipamento(idEquipamento));
     }
-    public static void inserirEndereco(){
+
+    public static void inserirEndereco() {
         System.out.println("Digite o ID da conta vinculada ao endereco:");
         int idConta = entrada.nextInt();
         entrada.nextLine();
@@ -627,13 +645,13 @@ public class AcademiaViwe {
         System.out.println(enderecoController.cadastraEndereco(idConta, cep, logradouro, bairro, numero));
     }
 
-    public static void deletarEndereco(){
+    public static void deletarEndereco() {
         System.out.println("Digite o ID do endereco que deseja deletar:");
         int idEndereco = entrada.nextInt();
         System.out.println(enderecoController.deletarEndereco(idEndereco));
     }
 
-    public static void atualizarEndereco(){
+    public static void atualizarEndereco() {
         System.out.println("Digite o id do endereco que deseja atualizar:");
         int idEndereco = entrada.nextInt();
         entrada.nextLine();
@@ -646,23 +664,19 @@ public class AcademiaViwe {
         System.out.println("Digite o numero do endereco:");
         int numero = entrada.nextInt();
         entrada.nextLine();
-        Endereco endereco = new Endereco(idEndereco, cep, logradouro, bairro, numero);
-        System.out.println(enderecoController.alterarEndereco(endereco));
+        System.out.println(enderecoController.alterarEndereco(idEndereco, cep, logradouro, bairro, numero));
     }
 
-    public static void listarEnderecos(){
+    public static void listarEnderecos() {
         ArrayList<Endereco> enderecos = enderecoController.listarEnderecos();
-        for (Endereco endereco : enderecos){
+        for (Endereco endereco : enderecos) {
             System.out.println("ID: " + endereco.getIdEndereco());
-            System.out.println("CEP: " + endereco.getCep());
-            System.out.println("Logradouro: " + endereco.getLogradouro());
-            System.out.println("Bairro: " + endereco.getBairro());
-            System.out.println("Numero: " + endereco.getNumero());
+            System.out.println("|| CEP: " + endereco.getCep() +"|| Logradouro: " + endereco.getLogradouro());
+            System.out.println("Bairro: " + endereco.getBairro() + "|| Numero: " + endereco.getNumero());
         }
     }
 
     private static void inserirEntrada() {
-        System.out.println("\n--- INSERIR NOVO REGISTRO DE ACESSO COMPLETO ---");
         try {
             System.out.print("Digite o ID do cliente: ");
             int idCliente = entrada.nextInt();
@@ -688,8 +702,7 @@ public class AcademiaViwe {
                 return;
             }
 
-            String resultado = registroController.processarNovoRegistro(idCliente, dataEntrada, dataSaida);
-            System.out.println(resultado);
+            System.out.println(registroController.inserirRegistro(idCliente, dataEntrada, dataSaida));
 
         } catch (InputMismatchException e) {
             System.out.println("Erro: Entrada inválida. Verifique o ID do cliente.");
@@ -697,46 +710,59 @@ public class AcademiaViwe {
         }
     }
 
+    private static void excluirRegistro() {
+        try {
+            System.out.println("Digite o ID do cliente vinculado ao registro que deseja excluir:");
+            int idCliente = entrada.nextInt();
+            entrada.nextLine();
+
+            System.out.println("Digite a data de entrada (dd/MM/yyyy HH:mm:ss):");
+            String dataEntradaStr = entrada.nextLine();
+
+            LocalDateTime dataEntrada = LocalDateTime.parse(dataEntradaStr, FORMATADOR_DATA_HORA);
+
+            String resultado = registroController.excluirRegistro(idCliente, dataEntrada);
+            System.out.println(resultado);
+
+        } catch (InputMismatchException e) {
+            System.out.println("Erro: O ID do cliente deve ser um número.");
+            entrada.nextLine();
+        } catch (DateTimeParseException e) {
+            System.out.println("Erro: Formato de data e hora inválido. Use dd/MM/yyyy HH:mm:ss.");
+        }
+    }
+
     private static void listarRegistros() {
-        System.out.println("\n--- LISTA DE REGISTROS DE ACESSO ---");
-        ArrayList<Registro> registros = registroController.obterTodosRegistros();
+        ArrayList<Registro> registros = registroController.listarRegistros();
 
 
         if (registros.isEmpty()) {
             System.out.println("Nenhum registro de acesso encontrado.");
         } else {
-            System.out.println("ID Cliente | Data Entrada          | Data Saída");
-            System.out.println("--------------------------------------------------");
+            System.out.println();
             for (Registro registro : registros) {
                 String dataEntradaStr = registro.getDataEntrada().format(FORMATADOR_DATA_HORA);
                 String dataSaidaStr = registro.getDataSaida().format(FORMATADOR_DATA_HORA);
-                System.out.printf("%-10d | %-21s | %s%n", registro.getIdCliente(), dataEntradaStr, dataSaidaStr);
+                System.out.println("ID: " + registro.getIdCliente() + " | Data entrada: " + dataEntradaStr + " | Data saída: " + dataSaidaStr);
             }
-            System.out.println("--------------------------------------------------");
         }
     }
 
-    private static void buscarRegistrosPorCliente() {
-        System.out.println("\n--- BUSCAR REGISTROS DE ACESSO POR CLIENTE ---");
+    private static void buscarPorCliente() {
         try {
             System.out.print("Digite o ID do cliente para buscar registros: ");
             int idCliente = entrada.nextInt();
             entrada.nextLine();
 
-            ArrayList<Registro> registrosBuscados = registroController.obterRegistrosPorCliente(idCliente);
+            ArrayList<Registro> registrosBuscados = registroController.buscarPorCliente(idCliente);
             if (registrosBuscados.isEmpty()) {
                 System.out.println("Nenhum registro de acesso encontrado para o cliente ID " + idCliente + ".");
             } else {
                 System.out.println("Registros para o Cliente ID: " + idCliente);
-                System.out.println("--------------------------------------------------");
-                System.out.println("ID Cliente | Data Entrada          | Data Saída");
-                System.out.println("--------------------------------------------------");
                 for (Registro registro : registrosBuscados) {
                     String dataEntradaStr = registro.getDataEntrada().format(FORMATADOR_DATA_HORA);
                     String dataSaidaStr = registro.getDataSaida().format(FORMATADOR_DATA_HORA);
-                    System.out.printf("%-10d | %-21s | %s%n", registro.getIdCliente(), dataEntradaStr, dataSaidaStr);
-                }
-                System.out.println("--------------------------------------------------");
+                    System.out.println("ID: " + registro.getIdCliente() + " | Data entrada: " + dataEntradaStr + " | Data saída: " + dataSaidaStr);                }
             }
         } catch (InputMismatchException e) {
             System.out.println("Erro: Entrada inválida. Por favor, digite um número inteiro.");
@@ -744,4 +770,4 @@ public class AcademiaViwe {
         }
     }
 }
-}
+
